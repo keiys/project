@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version "$springBootVersion"
+    id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
+    id 'io.freefair.lombok' version "$freefairLombokVersion"
+    id 'org.springdoc.openapi-gradle-plugin' version "1.6.0"
+    id 'org.hidetake.swagger.generator' version "2.19.2"
+}
+
+group = 'com.management.task'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+def var = dependencies {
+    implementation project(":task-services-interface")
+    implementation project(":exceptions")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation "org.postgresql:postgresql:$postgresqlVersion"
+    implementation "org.flywaydb:flyway-core:9.18.0"
+
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion"
+    compileOnly "org.springframework.data:spring-data-rest-core:$springDataVersion"
+    swaggerCodegen "io.swagger.codefen.v3:swagger-codegen-cli:3.0.34"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation("org.springframework.data:spring-data-commons:3.4.2")
+
+    //jwt
+    implementation group : 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.0'
+
+
+
+}
+
+
+test {
+    useJUnitPlatform()
+}

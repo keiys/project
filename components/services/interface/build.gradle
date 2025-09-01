@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'io.freefair.lombok' version "$freefairLombokVersion"
+}
+
+group = 'com.management.task'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project (":exceptions")
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion"
+    implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '3.4.3'
+}
+
+test {
+    useJUnitPlatform()
+}
