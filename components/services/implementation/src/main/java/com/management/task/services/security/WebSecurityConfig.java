@@ -12,10 +12,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Autowired
     private CustomUserDetails customUserDetailsService;
@@ -29,8 +31,8 @@ public class WebSecurityConfig {
 //    @Autowired
 //    private JwtAuthenticationEntrypoint entrypoint;
 //
-//    @Autowired
-//    private ThreadContextInterceptor interceptor;
+    @Autowired
+    private ThreadContextInterceptor interceptor;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity security) throws Exception {
@@ -57,6 +59,12 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return security.build();
 
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(interceptor)
+                .excludePathPatterns("/api/*/*/openapi/**", "/auth");
     }
 
 

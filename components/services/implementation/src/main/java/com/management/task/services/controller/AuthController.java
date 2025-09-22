@@ -1,11 +1,10 @@
 package com.management.task.services.controller;
 
 
-import com.management.task.management.services.requests.LoginRequest;
-import com.management.task.management.services.services.LoginService;
+import com.management.task.services.requests.LoginRequest;
+import com.management.task.services.services.LoginService;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

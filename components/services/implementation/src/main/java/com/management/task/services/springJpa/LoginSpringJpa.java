@@ -1,9 +1,9 @@
 package com.management.task.services.springJpa;
 
-import com.management.task.management.services.exceptions.userexceptions.UserApiException;
-import com.management.task.management.services.exceptions.userexceptions.UserBadRequestException;
-import com.management.task.management.services.requests.LoginRequest;
-import com.management.task.management.services.services.LoginService;
+import com.management.task.services.exceptions.userexceptions.UserApiException;
+import com.management.task.services.exceptions.userexceptions.UserBadRequestException;
+import com.management.task.services.requests.LoginRequest;
+import com.management.task.services.services.LoginService;
 import com.management.task.services.entity.UserEntity;
 import com.management.task.services.repository.UserRepository;
 import com.management.task.services.security.JwtUtil;

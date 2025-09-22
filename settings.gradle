@@ -2,9 +2,10 @@ rootProject.name = 'task-management'
 include ':task-service-implementation'
 include ':task-services-interface'
 include ':exceptions'
+include ':user-aware'
 
 project(':task-service-implementation').projectDir = file("components/services/implementation")
 project(':task-services-interface').projectDir = file("components/services/interface")
 project(':exceptions').projectDir = file("components/common/exceptions")
-
+project(':user-aware').projectDir = file("components/common/user-aware")
 

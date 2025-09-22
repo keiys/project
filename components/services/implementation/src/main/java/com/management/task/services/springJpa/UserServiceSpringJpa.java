@@ -1,12 +1,13 @@
 package com.management.task.services.springJpa;
 
-import com.management.task.management.services.exceptions.userexceptions.UserAlreadyExcistException;
-import com.management.task.management.services.exceptions.userexceptions.UserApiException;
-import com.management.task.management.services.exceptions.userexceptions.UserBadRequestException;
-import com.management.task.management.services.exceptions.userexceptions.UserNotFoundException;
-import com.management.task.management.services.requests.UserRequest;
-import com.management.task.management.services.responses.UserResponse;
-import com.management.task.management.services.services.UserService;
+import com.management.task.services.exceptions.userexceptions.UserAlreadyExcistException;
+import com.management.task.services.exceptions.userexceptions.UserApiException;
+import com.management.task.services.exceptions.userexceptions.UserBadRequestException;
+import com.management.task.services.exceptions.userexceptions.UserNotFoundException;
+import com.management.task.services.requests.UserRequest;
+import com.management.task.services.responses.UserResponse;
+import com.management.task.services.security.NoAuthenticationRequired;
+import com.management.task.services.services.UserService;
 import com.management.task.services.entity.UserEntity;
 import com.management.task.services.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,14 +33,18 @@ public class UserServiceSpringJpa implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserService userService;
+
 
     @Override
     public UserResponse createUser(UserRequest userRequest) {
         if(userRequest.getUserId() != null){
             throw new UserBadRequestException("User id must be null");
         }
+
+        if (StringUtils.isBlank(userRequest.getPassword())) {
+            throw new UserBadRequestException("Password cannot be empty");
+        }
+
         validateFields(userRequest);
         validatePassword(userRequest.getPassword());
         validateDuplicates(null, userRequest);
@@ -93,14 +97,15 @@ public class UserServiceSpringJpa implements UserService {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("User not found with id: " + userId));
 
-        validateFields(userRequest);
-        validatePassword(userRequest.getPassword());
-        validateDuplicates(userId, userRequest);
+       if (StringUtils.isNotBlank(userRequest.getPassword())) {
+           throw new UserBadRequestException("Password should be empty or null");
+       }
 
+        validateFields(userRequest);
+        validateDuplicates(userId, userRequest);
         userEntity.setName(userRequest.getName());
         userEntity.setSurname(userRequest.getSurname());
         userEntity.setEmail(userRequest.getEmail());
-        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         try{
             return userRepository.save(userEntity).toUserResponse();
@@ -115,7 +120,7 @@ public class UserServiceSpringJpa implements UserService {
                 new UserNotFoundException("User not found with id: " + userId));
 
         try{
-            userService.deleteUser(userId);
+            userRepository.deleteById(userId);
         }catch (Exception ex){
             throw new UserApiException("Error occurred while trying to delete user", ex);
         }
@@ -175,9 +180,6 @@ public class UserServiceSpringJpa implements UserService {
     private void validateFields(UserRequest userRequest) {
         if(userRequest.getVerifyCode() != null){
             throw new UserBadRequestException("Verify code must be null");
-        }
-        if(userRequest.getRole() != null){
-            throw new UserBadRequestException("Role must be null");
         }
         if(userRequest.getStatus() != null){
             throw new UserBadRequestException("Status must be null");

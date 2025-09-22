@@ -1,14 +1,15 @@
 package com.management.task.services.entity;
 
-import com.management.task.management.services.Enums.Role;
-import com.management.task.management.services.Enums.Status;
-import com.management.task.management.services.constants.DatabaseConstants;
-import com.management.task.management.services.requests.UserRequest;
-import com.management.task.management.services.responses.UserResponse;
+import com.management.task.services.Enums.Role;
+import com.management.task.services.Enums.Status;
+import com.management.task.services.constants.DatabaseConstants;
+import com.management.task.services.requests.UserRequest;
+import com.management.task.services.responses.UserResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -40,6 +41,12 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<TaskEntity> createdTasks;
+
+    @OneToMany(mappedBy = "assignedTo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<TaskEntity> assignedTasks;
+
     public UserEntity(UserRequest userRequest){
         userId = userRequest.getUserId();
         name = userRequest.getName();
@@ -49,6 +56,17 @@ public class UserEntity {
         verifyCode = userRequest.getVerifyCode();
         status = userRequest.getStatus();
         role = userRequest.getRole();
+    }
+
+    public UserEntity(UserResponse userResponse){
+        userId = userResponse.userId();
+        name = userResponse.name();
+        surname = userResponse.surname();
+        email = userResponse.email();
+        password = userResponse.password();
+        verifyCode = userResponse.verifyCode();
+        status = userResponse.status();
+        role = userResponse.role();
     }
 
     public UserRequest toUserRequest(){

@@ -1,11 +1,10 @@
 package com.management.task.services.security;
 
-import com.management.task.management.services.exceptions.userexceptions.UserBadRequestException;
+import com.management.task.services.exceptions.userexceptions.UserBadRequestException;
 import com.management.task.services.entity.UserEntity;
 import jakarta.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.*;
-import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

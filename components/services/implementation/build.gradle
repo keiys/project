@@ -15,8 +15,10 @@ repositories {
 }
 
 def var = dependencies {
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation project(":task-services-interface")
     implementation project(":exceptions")
+    implementation project(":user-aware")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -26,7 +28,7 @@ def var = dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion"
     compileOnly "org.springframework.data:spring-data-rest-core:$springDataVersion"
     swaggerCodegen "io.swagger.codefen.v3:swagger-codegen-cli:3.0.34"
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation("org.springframework.data:spring-data-commons:3.4.2")
 
     //jwt

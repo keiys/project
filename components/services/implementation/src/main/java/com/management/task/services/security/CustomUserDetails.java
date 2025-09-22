@@ -1,7 +1,7 @@
 package com.management.task.services.security;
 
-import com.management.task.management.services.exceptions.userexceptions.UserApiException;
-import com.management.task.management.services.exceptions.userexceptions.UserNotFoundException;
+import com.management.task.services.exceptions.userexceptions.UserApiException;
+import com.management.task.services.exceptions.userexceptions.UserNotFoundException;
 import com.management.task.services.entity.UserEntity;
 import com.management.task.services.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

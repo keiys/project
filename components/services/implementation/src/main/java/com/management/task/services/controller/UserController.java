@@ -1,29 +1,24 @@
 package com.management.task.services.controller;
 
 import com.management.task.ExceptionResponse;
-import com.management.task.management.services.constants.RoutConstants;
-import com.management.task.management.services.requests.UserRequest;
-import com.management.task.management.services.responses.UserResponse;
-import com.management.task.management.services.services.UserService;
-import com.management.task.services.repository.UserRepository;
+import com.management.task.services.constants.RoutConstants;
+import com.management.task.services.requests.UserRequest;
+import com.management.task.services.responses.UserResponse;
+import com.management.task.services.security.NoAuthenticationRequired;
+import com.management.task.services.services.UserService;
 import com.management.task.services.security.RequiredAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -55,6 +50,7 @@ public class UserController {
     })
 
     @PostMapping
+    @NoAuthenticationRequired
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@RequestBody @Valid UserRequest userRequest) {
         log.info("Received request to create user: {}", userRequest);
@@ -68,7 +64,7 @@ public class UserController {
             @ApiResponse(responseCode ="200", description = "Request was successfully", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
             }),
-            @ApiResponse(responseCode ="500", description = "Error occurred while creating user", content = {
+            @ApiResponse(responseCode ="500", description = "Error occurred while getting all user", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
             }),
     })
@@ -118,11 +114,12 @@ public class UserController {
             @ApiResponse(responseCode ="409", description = "User already excist", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
             }),
-            @ApiResponse(responseCode ="500", description = "Error occurred while getting user", content = {
+            @ApiResponse(responseCode ="500", description = "Error occurred while updating user", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
             }),
     })
     @PutMapping("/{userid}")
+    @RequiredAdminUser
     public UserResponse updateUser(@PathVariable UUID userid, @RequestBody @Valid UserRequest userRequest) {
         log.info("Received request to update user with ID {}", userid);
         UserResponse user = userService.updateUser(userid, userRequest);
@@ -139,7 +136,7 @@ public class UserController {
             @ApiResponse(responseCode ="404", description = "Entity not found", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
             }),
-            @ApiResponse(responseCode ="500", description = "Error occurred while getting user", content = {
+            @ApiResponse(responseCode ="500", description = "Error occurred while deleting user", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))
             }),
     })
